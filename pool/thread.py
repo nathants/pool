@@ -1,30 +1,26 @@
 from __future__ import absolute_import, print_function
-import multiprocessing
 import concurrent.futures
 import logging
+import threading
+
 import s.cached
 
 
-_size = multiprocessing.cpu_count() + 2
+_size = 20
 
 
 @s.cached.func
 def _pool():
-    logging.debug('new process pool, size: %s', _size)
-    return concurrent.futures.ProcessPoolExecutor(_size)
+    logging.debug('new thread pool, size: %s', _size)
+    return concurrent.futures.ThreadPoolExecutor(_size)
 
 
 def new(fn, *a, **kw):
     daemon = kw.pop('_daemon', True)
-    obj = multiprocessing.Process(target=fn, args=a, kwargs=kw)
+    obj = threading.Thread(target=fn, args=a, kwargs=kw)
     obj.daemon = daemon
     obj.start()
     return obj
-
-
-def wait(*fns):
-    objs = [new(fn) for fn in fns]
-    [obj.join() for obj in objs]
 
 
 def submit(fn, *a, **kw):
