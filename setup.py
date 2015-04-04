@@ -10,4 +10,5 @@ setuptools.setup(
     url='http://github.com/nathants/pool',
     install_requires=open('requirements.txt').readlines(),
     packages=setuptools.find_packages(),
+    description='process pools',
 )
