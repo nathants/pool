@@ -23,5 +23,10 @@ def new(fn, *a, **kw):
     return obj
 
 
+def wait(*fns):
+    objs = [new(fn) for fn in fns]
+    [obj.join() for obj in objs]
+
+
 def submit(fn, *a, **kw):
     return _pool().submit(fn, *a, **kw)
