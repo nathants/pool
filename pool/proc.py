@@ -30,3 +30,6 @@ def wait(*fns):
 
 def submit(fn, *a, **kw):
     return _pool().submit(fn, *a, **kw)
+
+
+# TODO monitor, like wait, but blows up when anybody dies
