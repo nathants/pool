@@ -1,7 +1,7 @@
 import concurrent.futures
 import logging
 import threading
-
+import time
 import s.cached
 
 
@@ -43,7 +43,8 @@ def submit(fn, *a, **kw):
     return _pool().submit(fn, *a, **kw)
 
 
-def supervise(*fns):
+def supervise(*fns, sleep=1):
     threads = [_new(fn) for fn in fns]
     while True:
         assert all(thread.is_alive() for thread in threads)
+        time.sleep(sleep)
