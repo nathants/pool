@@ -1,4 +1,3 @@
-from __future__ import absolute_import, print_function
 import concurrent.futures
 import logging
 import multiprocessing
@@ -23,13 +22,29 @@ def new(fn, *a, **kw):
     return obj
 
 
+def _new(fn):
+    if callable(fn):
+        return new(fn)
+    else:
+        try:
+            fn, *args = fn
+            return new(fn, *args)
+        except ValueError:
+            fn, args, kwargs = fn
+            return new(fn, *args, **kwargs)
+
+
 def wait(*fns):
-    objs = [new(fn) for fn in fns]
-    [obj.join() for obj in objs]
+    for proc in [_new(fn) for fn in fns]:
+        proc.join()
+    return None
 
 
 def submit(fn, *a, **kw):
     return _pool().submit(fn, *a, **kw)
 
 
-# TODO monitor, like wait, but blows up when anybody dies
+def supervise(*fns):
+    procs = [_new(fn) for fn in fns]
+    while True:
+        assert all(proc.is_alive() for proc in procs)

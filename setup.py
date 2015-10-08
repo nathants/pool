@@ -8,7 +8,6 @@ setuptools.setup(
     author='nathan todd-stone',
     author_email='me@nathants.com',
     url='http://github.com/nathants/pool',
-    install_requires=open('requirements.txt').readlines(),
     packages=setuptools.find_packages(),
     description='process pools',
 )

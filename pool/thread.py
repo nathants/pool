@@ -1,4 +1,3 @@
-from __future__ import absolute_import, print_function
 import concurrent.futures
 import logging
 import threading
@@ -22,11 +21,29 @@ def new(fn, *a, **kw):
     obj.start()
     return obj
 
+def _new(fn):
+    if callable(fn):
+        return new(fn)
+    else:
+        try:
+            fn, *args = fn
+            return new(fn, *args)
+        except ValueError:
+            fn, args, kwargs = fn
+            return new(fn, *args, **kwargs)
+
 
 def wait(*fns):
-    objs = [new(fn) for fn in fns]
-    [obj.join() for obj in objs]
+    for thread in [_new(fn) for fn in fns]:
+        thread.join()
+    return None
 
 
 def submit(fn, *a, **kw):
     return _pool().submit(fn, *a, **kw)
+
+
+def supervise(*fns):
+    threads = [_new(fn) for fn in fns]
+    while True:
+        assert all(thread.is_alive() for thread in threads)
