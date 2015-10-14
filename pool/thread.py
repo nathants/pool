@@ -21,12 +21,13 @@ def new(fn, *a, **kw):
     obj.start()
     return obj
 
+
 def _new(fn):
     if callable(fn):
         return new(fn)
     else:
         try:
-            fn, *args = fn
+            fn, args = fn
             return new(fn, *args)
         except ValueError:
             fn, args, kwargs = fn
