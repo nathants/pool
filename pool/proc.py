@@ -2,13 +2,13 @@ import concurrent.futures
 import time
 import logging
 import multiprocessing
-import s.cached
+import util.cached
 
 
 _size = multiprocessing.cpu_count() + 2
 
 
-@s.cached.func
+@util.cached.func
 def _pool():
     logging.debug('new process pool, size: %s', _size)
     return concurrent.futures.ProcessPoolExecutor(_size)

@@ -2,13 +2,13 @@ import concurrent.futures
 import logging
 import threading
 import time
-import s.cached
+import util.cached
 
 
 _size = 20
 
 
-@s.cached.func
+@util.cached.func
 def _pool():
     logging.debug('new thread pool, size: %s', _size)
     return concurrent.futures.ThreadPoolExecutor(_size)
