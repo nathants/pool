@@ -22,22 +22,23 @@ def new(fn, *a, **kw):
     return obj
 
 
-def _new(fn):
-    if callable(fn):
-        return new(fn)
-    else:
+def _unpack(fn):
+    args, kwargs = [], {}
+    if not callable(fn):
         try:
             fn, args = fn
-            return new(fn, *args)
         except ValueError:
             fn, args, kwargs = fn
-            return new(fn, *args, **kwargs)
+    return fn, args, kwargs
 
 
-def wait(*fns):
-    for thread in [_new(fn) for fn in fns]:
-        thread.join()
-    return None
+def wait(*fns, max_threads=None):
+    if max_threads:
+        with concurrent.futures.ThreadPoolExecutor(max_threads) as pool:
+            concurrent.futures.wait([pool.submit(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)])
+    else:
+        for thread in [new(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)]:
+            thread.join()
 
 
 def submit(fn, *a, **kw):
@@ -45,7 +46,7 @@ def submit(fn, *a, **kw):
 
 
 def supervise(*fns, sleep=1):
-    threads = [_new(fn) for fn in fns]
+    threads = [new(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)]
     while True:
         assert all(thread.is_alive() for thread in threads)
         time.sleep(sleep)
