@@ -21,6 +21,7 @@ def new(fn, *a, **kw):
     obj.start()
     return obj
 
+
 def _unpack(fn):
     args, kwargs = [], {}
     if not callable(fn):
@@ -29,6 +30,12 @@ def _unpack(fn):
         except ValueError:
             fn, args, kwargs = fn
     return fn, args, kwargs
+
+
+def as_completed(*fns, max_procs=_size):
+    with concurrent.futures.ProcessPoolExecutor(max_procs) as pool:
+        for f in concurrent.futures.as_completed([pool.submit(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)]):
+            yield f.result()
 
 
 def wait(*fns, max_procs=None):
