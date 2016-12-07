@@ -51,6 +51,10 @@ def submit(fn, *a, **kw):
     return _pool().submit(fn, *a, **kw)
 
 
+def map(fn, *iterables):
+    return _pool().map(fn, *iterables)
+
+
 def supervise(*fns, sleep=1):
     threads = [new(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)]
     while True:
