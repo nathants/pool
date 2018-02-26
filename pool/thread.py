@@ -32,19 +32,15 @@ def _unpack(fn):
     return fn, args, kwargs
 
 
-def as_completed(*fns, max_threads=_size):
-    with concurrent.futures.ThreadPoolExecutor(max_threads) as pool:
-        for f in concurrent.futures.as_completed([pool.submit(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)]):
-            yield f.result()
+def as_completed(*fns):
+    fs = [_pool().submit(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)]
+    for f in concurrent.futures.as_completed(fs):
+        yield f.result()
 
 
-def wait(*fns, max_threads=_size):
-    if max_threads:
-        with concurrent.futures.ThreadPoolExecutor(max_threads) as pool:
-            concurrent.futures.wait([pool.submit(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)])
-    else:
-        for thread in [new(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)]:
-            thread.join()
+def wait(*fns):
+    fs = [_pool().submit(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)]
+    concurrent.futures.wait(fs)
 
 
 def submit(fn, *a, **kw):
