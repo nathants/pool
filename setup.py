@@ -12,5 +12,5 @@ setuptools.setup(
     packages=['pool'],
     install_requires=['py-util'],
     dependency_links=['https://github.com/nathants/py-util/tarball/4d1fe20ecfc0b6982933a8c9b622b1b86da2be5e#egg=py-util-0.0.1'],
-    description='process pools',
+    description='process and thread pools',
 )
