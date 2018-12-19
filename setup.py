@@ -10,7 +10,7 @@ setuptools.setup(
     author_email='me@nathants.com',
     url='http://github.com/nathants/py-pool',
     packages=['pool'],
-    install_requires=['py-util'],
+    install_requires=['py-util==0.0.1'],
     dependency_links=['https://github.com/nathants/py-util/tarball/fa60dbf761a61beb94614af89240fd5986d26786#egg=py-util-0.0.1'],
     description='process and thread pools',
 )
