@@ -1,4 +1,9 @@
 ### process and thread pools
 
 ### installation
-`pip --process-dependency-links git+https://github.com/nathants/py-pool@4b2b004 # or some other git hash`
+```
+git clone https://github.com/nathants/py-pool
+cd py-pool
+pip install -r requirements.txt
+pip install .
+```
