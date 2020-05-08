@@ -37,11 +37,9 @@ def as_completed(*fns):
     for f in concurrent.futures.as_completed(fs):
         yield f.result()
 
-
 def wait(*fns):
-    fs = [_pool().submit(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)]
-    concurrent.futures.wait(fs)
-
+    for _ in as_completed(*fns):
+        pass
 
 def submit(fn, *a, **kw):
     return _pool().submit(fn, *a, **kw)
