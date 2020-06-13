@@ -4,15 +4,12 @@ import threading
 import time
 import util.cached
 
-
 _size = 20
-
 
 @util.cached.func
 def _pool():
     logging.debug('new thread pool, size: %s', _size)
     return concurrent.futures.ThreadPoolExecutor(_size)
-
 
 def new(fn, *a, **kw):
     daemon = kw.pop('_daemon', True)
@@ -20,7 +17,6 @@ def new(fn, *a, **kw):
     obj.daemon = daemon
     obj.start()
     return obj
-
 
 def _unpack(fn):
     args, kwargs = [], {}
@@ -30,7 +26,6 @@ def _unpack(fn):
         except ValueError:
             fn, args, kwargs = fn
     return fn, args, kwargs
-
 
 def as_completed(*fns):
     fs = [_pool().submit(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)]
@@ -44,10 +39,8 @@ def wait(*fns):
 def submit(fn, *a, **kw):
     return _pool().submit(fn, *a, **kw)
 
-
 def map(fn, *iterables):
     return _pool().map(fn, *iterables)
-
 
 def supervise(*fns, sleep=1):
     threads = [new(fn, *a, **kw) for fn, a, kw in map(_unpack, fns)]
