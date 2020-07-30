@@ -4,12 +4,12 @@ import threading
 import time
 import util.cached
 
-_size = 20
+size = 20
 
 @util.cached.func
 def _pool():
-    logging.debug('new thread pool, size: %s', _size)
-    return concurrent.futures.ThreadPoolExecutor(_size)
+    logging.debug('new thread pool, size: %s', size)
+    return concurrent.futures.ThreadPoolExecutor(size)
 
 def new(fn, *a, **kw):
     daemon = kw.pop('_daemon', True)

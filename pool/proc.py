@@ -4,12 +4,12 @@ import logging
 import multiprocessing
 import util.cached
 
-_size = multiprocessing.cpu_count() + 2
+size = multiprocessing.cpu_count() + 2
 
 @util.cached.func
 def _pool():
-    logging.debug('new process pool, size: %s', _size)
-    return concurrent.futures.ProcessPoolExecutor(_size)
+    logging.debug('new process pool, size: %s', size)
+    return concurrent.futures.ProcessPoolExecutor(size)
 
 def new(fn, *a, **kw):
     daemon = kw.pop('_daemon', True)
