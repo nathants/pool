@@ -1,4 +1,4 @@
-### process and thread pools
+# py-pool
 
 ### installation
 ```
