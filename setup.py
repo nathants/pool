@@ -9,5 +9,6 @@ setuptools.setup(
     author_email='me@nathants.com',
     url='http://github.com/nathants/py-pool',
     packages=['pool'],
+    package_data = {'pool': ['py.typed']},
     description='process and thread pools',
 )
